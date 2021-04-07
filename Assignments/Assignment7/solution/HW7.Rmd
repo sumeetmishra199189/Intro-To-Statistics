@@ -1,0 +1,179 @@
+---
+title: "HW7"
+author: "Sumeet Mishra"
+date: "2/28/2019"
+output: pdf_document
+---
+
+```{r}
+x774 = scan("http://pages.iu.edu/~mtrosset/StatInfeR/Data/sample774.dat")
+x776 = scan("http://pages.iu.edu/~mtrosset/StatInfeR/Data/test351.dat")
+```
+
+##1.(a)
+
+```{r}
+plot(ecdf(x774))
+```
+
+##(b)
+##plug-in estimates of the mean 
+
+```{r}
+mean(x774)
+```
+
+##variance
+
+```{r}
+var=mean(x774^2) - mean(x774)^2
+var
+```
+
+##median 
+
+```{r}
+median(x774)
+```
+
+##interquartile range
+
+```{r}
+iq=quantile(x774,0.75,type=2)-quantile(x774,0.25,type=2)
+iq
+```
+
+##(c) 
+
+
+```{r}
+iq/sqrt(var)
+```
+
+##Since the ratio of sd to interquantile range is not ~1.35,we can say that it is not taken from normal distribution. 
+
+
+##(d) 
+
+```{r}
+qqnorm(x774)
+```
+
+##Since the points on the graph together does not make a line from bottom left to top right(linear), we can say that it is not drawn from normal distribution.
+
+##(e) 
+
+```{r}
+y <- log(x774)
+qqnorm(y)
+```
+
+##It is still not a normal distribution as the points on the graph together does not make a line from bottom left to top right(linear).
+
+##2.Forty-one students taking Math 351 (Applied Statistics) at the College of William & Mary were administered a test.
+
+##(a) Do these numbers appear to be a random sample from a normal distribution?
+
+```{r}
+qqnorm(x776)
+```
+
+##It's not a normal distribution as the points on the graph together does not make a line from bottom left to top right(linear)
+
+##(b) Does this list of numbers have any interesting anomalies?
+
+```{r}
+plot(density(x776), main ='Kernel density plot')
+
+hist(x776)
+```
+
+##From the above 2 plots and the normal density plot we observed that the distribution is taken from a bimodal distribution skewed to the left. 
+
+
+##3.
+
+##n=20,mean=20x5=100,sd=(30/60)x20=10
+
+```{r}
+1-pnorm(105,100,10/sqrt(20))
+```
+
+##4.(a)
+## the expected value of X is-
+##EX=(-2x0.3)+(-1x0.6)+(12x0.1)=0
+
+##(b)Var(X) is-
+
+```{r}
+(((-2)^2*0.3)+((-1)^2*0.6)+((12)^2*0.1))-((-2*0.3)+(-1*0.6)+(12*0.1))^2
+```
+
+##(c)
+##The expected value is-
+
+##0
+
+##(d)
+##The variance is 16.2/n.
+
+##(e)
+##n = 100 
+
+```{r}
+1-pnorm(0.5,0,sqrt(16.2/100))
+```
+
+##5.
+
+```{r}
+data=read.csv('Book2.csv', header = TRUE)
+#View(data)
+```
+
+##(a) Lacking any other information, our best estimate for the population mean household size is the sample mean. What is the sample mean of our data?
+
+```{r}
+n=sum(data$Number_of_households)
+mean=sum(data$Number_of_households*data$Household_size)/n
+mean
+```
+
+##(b) What is our estimate for the standard deviation of household sizes?
+
+```{r}
+EX2=sum((data$Household_size)^2*data$Number_of_households)/n
+var=EX2-(mean)^2
+sd=sqrt(var)
+sd
+```
+
+##(c) What is the estimated standard error of the sample mean? (That is, based on our answer to (b), what is our estimate for the standard deviation of the distribution of the sample mean?)
+
+```{r}
+stderror=sd/sqrt(n)
+stderror
+```
+
+##(d) Our error is the difference between the sample mean and the population mean. Using the normal distribution, find the approximate probability that the absolute value of the error in a survey of this form and size is less than 0.5.
+   
+##P(|X|<0.5)=>P(-0.5<X<0.5)
+##=>F(0.5)-F(-0.5)
+```{r}
+pnorm(0.5,0,stderror)-pnorm(-0.5,0,stderror)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

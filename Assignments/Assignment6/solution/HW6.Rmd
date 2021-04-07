@@ -1,0 +1,113 @@
+---
+title: "StatsAss6"
+author: "Sumeet Mishra"
+date: "2/27/2019"
+output: pdf_document
+---
+
+```{r}
+x = scan("http://pages.iu.edu/~mtrosset/StatInfeR/Data/sample771.dat")
+```
+##Q1.(a) Empirical Plot of x
+
+```{r}
+plot(ecdf(x))
+```
+
+##1.(b)
+##Mean
+
+```{r}
+mean(x)
+```
+##Var
+
+```{r}
+var=mean(x^2) - mean(x)^2
+var
+```
+
+##1.(c)
+##Median
+
+```{r}
+median(x)
+```
+
+##Interquantile range
+```{r}
+iq=quantile(x,0.75)-quantile(x,0.25)
+iq
+```
+
+##1.(d)
+##plug-in estimate of the interquartile range to the square root of the plug-in estimate of the variance
+
+```{r}
+iq/sqrt(var)
+```
+
+##1.(e)
+##boxplot
+
+```{r}
+boxplot(x)
+```
+
+##1.(f)
+##normal probability plot
+```{r}
+qqnorm(x)
+```
+
+##1.(g)
+##kernel density estimate
+```{r}
+plot(density(x))
+```
+
+##1.(h)
+##The sample was not drawn from normal distribution as it has two lumps and it's not symmetric(right skewed).
+
+##Q.2.(a)
+
+```{r}
+am=read.csv('American_League.csv')
+nat=read.csv('National_League.csv')
+boxplot(am$W,nat$W,main = 'Boxplots of wins in 2015 for 2 leagues',
+ylab='Number of wins',
+names = c('American League', 'National League'))
+```
+
+##(b)
+##Distribution of American league
+```{r}
+summary(am$W)
+```
+
+##Distribution of National league
+```{r}
+summary(nat$W)
+```
+
+```{r}
+hist(am$W,main = 'Histogram of number of wins for American league',xlab='Number of wins')
+```
+
+```{r}
+hist(nat$W,breaks=10,main = 'Histogram of number of wins for National league',xlab='Number of wins')
+```
+
+
+```{r}
+plot(density(am$W), main='Kernel Density plot of American League')
+```
+
+```{r}
+plot(density(nat$W), main='Kernel Density plot of National League')
+```
+
+##From the above graphs we can see the distributions of the wins of both American and National league. None of them are normal distributions but wins of National league is a bimodal distribution as it has 2 peaks in the density plots. Also from summary of both the distributions it is clear that National league has more wins than American league.
+
+
+

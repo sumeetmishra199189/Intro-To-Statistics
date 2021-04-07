@@ -1,0 +1,326 @@
+---
+title: "HW11"
+author: "Sumeet Mishra"
+date: "4/12/2019"
+output: pdf_document
+---
+
+1. (5 points) Trosset Section 13.4 Exercise 2
+
+
+
+
+Null hypothesis is M&M milk chocolate is mixed in proportions as claimed by Mars company that is {0.13, 0.14, 0.13, 0.24, 0.20, 0.16}
+Alternate hypothesis is M&M milk chocolate is not mixed in proportions as claimed by the Mars company.
+
+Assume, significance level, $\alpha$ = 0.05
+```{r}
+observed=c(121, 84, 118, 226, 226, 123) 
+obs_sum=sum(observed)
+prop=c(0.13, 0.14, 0.13, 0.24, 0.20, 0.16) 
+expected=rep(prop*obs_sum)
+```
+
+The pvalue in likelyhood ratio test is- 
+
+```{r}
+G2 = 2 * sum(observed * log(observed/expected)) 
+pvalue= 1 - pchisq(G2, df=5)
+pvalue
+```
+
+The pvalue in Pearson's test is- 
+
+```{r}
+X2 = sum((observed - expected)^2 / expected)
+pvalue= 1 - pchisq(X2, df=5)
+pvalue
+```
+As the pvalue of both the tests is < $\alpha$ , we reject null hypothesis and conclude that the M&M milk chocolates are not mixed in
+proportions as claimed by the Mars company.
+
+
+2. (7 points) Trosset Section 13.4 Exercise 5
+(a)
+```{r}
+fx=c()
+for (x in 1:9) {
+fx[x]=log10(1+(1/x)) }
+sum=sum(fx)
+sum
+fx
+```
+Since sum of all the probabilities is 1 and each probability is in between 0 and 1, we can say that the PMF is valid.
+
+(b)
+
+Null hypothesis is The leading digits of the town populations follow Benford’s law.
+Alternate hypothesis is The leading digits of the town populations does not follow Benford’s law.
+
+Assume, significance level, $\alpha$ = 0.05
+
+```{r}
+observed=c(107, 55, 39, 22, 13, 18, 13, 23, 15) 
+obs_sum=sum(observed)
+expected=rep(fx*obs_sum)
+```
+
+The pvalue in likelyhood ratio test is- 
+
+```{r}
+G2 = 2 * sum(observed * log(observed/expected)) 
+pvalue= 1 - pchisq(G2, df=8)
+pvalue
+```
+
+As the pvalue of the Likelihood ratio test is < $\alpha$ = 0.05, we reject null hypothesis and conclude that the leading digits of the town populations does not follow Benford’s law.
+
+The pvalue in Pearson's test is- 
+
+```{r}
+X2 = sum((observed - expected)^2 / expected)
+pvalue= 1 - pchisq(X2, df=8)
+pvalue
+```
+
+As the pvalue of the Pearson test is > $\alpha$ = 0.05, we fail to reject null hypothesis and conclude that the leading digits of the town populations follow Benford’s law.
+
+
+3. (5 points) Trosset Section 13.4 Exercise 11
+
+
+Null hypothesis is The patient’s response to treatment for Hodgkin’s disease is independent of histological type.
+Alternate hypothesis is The patient’s response to treatment for Hodgkin’s disease is varies by histological type.
+Assume, significance level, $\alpha$ = 0.05
+
+```{r}
+
+observed1=c(74, 18, 12, 68, 16, 12, 154, 54, 58, 18, 10, 44) 
+N=sum(observed1)
+LP=(74+18+12)/N
+NS=(68+16+12)/N
+MC=(154+54+58)/N 
+LD=(18+10+44)/N 
+positive=c(74+68+154+18)/N 
+partial=c(18+16+54+10)/N 
+none=c(12+12+58+44)/N 
+expected1=c(LP*positive*N,LP*partial*N,LP*none*N,NS*positive*N,NS*partial*N, NS*none*N, MC*positive*N, MC*partial*N, MC*none*N,LD*positive*N, LD*partial*N, LD*none*N)
+data.frame(observed1, expected1=round(expected1, 1))
+```
+
+The pvalue in likelyhood ratio test is- 
+
+```{r}
+df=(4-1)*(3-1)
+G2 = 2 * sum(observed1 * log(observed1/expected1)) 
+pvalue= 1 - pchisq(G2, df=df)
+pvalue
+```
+
+The pvalue in Pearson's test is- 
+
+```{r}
+X2 = sum((observed1 - expected1)^2 / expected1)
+pvalue= 1 - pchisq(X2, df=df)
+pvalue
+```
+
+As the pvalue of both the tests is < $\alpha$ = 0.05, we reject null hypothesis and conclude that the patient’s response to treatment for
+Hodgkin’s disease varies by histological type.
+
+4.
+
+```{r}
+EPL201415 = read.csv("http://www.football-data.co.uk/mmz4281/1415/E0.csv")
+```
+
+(a) Home Goals
+
+Null hypothesis is the home team goals follows a poisson distribution.
+Alternate hypothesis is the home team goals does not follow a poisson distribution. 
+Assume, significance level, $\alpha$ = 0.05
+
+```{r}
+homegoals = EPL201415$FTHG[1:380] 
+data.frame(table(homegoals))
+games=length(homegoals)
+goals=sum(homegoals)
+ave=goals/games
+expected = games * dpois(0:20,ave) 
+data.frame(goals=0:20,expected=round(expected, 1))
+
+```
+
+As the expected values is less than 5 for goals 6 and above, we combine 5 or more goals.
+
+```{r}
+observed=c(92,119,102,46,12,9)
+expected=rep(NA, 6)
+expected[1:5]=games * dpois(0:4,ave) 
+expected[6]=games * (1 - ppois(4,ave)) 
+data.frame(observed, expected=round(expected, 1))
+
+```
+
+
+
+
+
+The pvalue in likelyhood ratio test is- 
+
+```{r}
+df=4
+G2 = 2 * sum(observed * log(observed/expected)) 
+pvalue= 1 - pchisq(G2, df=df)
+pvalue
+```
+
+The pvalue in Pearson's test is- 
+
+```{r}
+X2 = sum((observed - expected)^2 / expected)
+pvalue= 1 - pchisq(X2, df=df)
+pvalue
+```
+
+As the pvalue of both the tests is > $\alpha$ = 0.05, we fail to reject null hypothesis and conclude that the home team goals follows a poisson distribution.
+
+(b) Away Team goals
+
+Null hypothesis is the away team goals follows a poisson distribution.
+Alternate hypothesis is the away team goals does not follow a poisson distribution. 
+Assume, significance level, $\alpha$ = 0.05
+
+```{r}
+awaygoals = EPL201415$FTAG[1:380] 
+data.frame(table(awaygoals))
+games=length(awaygoals)
+goals=sum(awaygoals)
+ave=goals/games
+expected = games * dpois(0:20, ave) 
+data.frame(goals=0:20, expected=round(expected, 1))
+```
+
+As the expected values is less than 5 for goals 5 and above , we combine 4 or more goals.
+
+```{r}
+observed=c(132,134,73,32,9)
+expected=rep(NA, 5)
+expected[1:4]=games * dpois(0:3,ave) 
+expected[5]=games * (1 - ppois(3, ave)) 
+data.frame(observed, expected=round(expected, 1))
+```
+The pvalue in likelyhood ratio test is- 
+
+```{r}
+df=3
+G2 = 2 * sum(observed * log(observed/expected)) 
+pvalue= 1 - pchisq(G2, df=df)
+pvalue
+```
+
+The pvalue in Pearson's test is- 
+
+```{r}
+X2 = sum((observed - expected)^2 / expected)
+pvalue= 1 - pchisq(X2, df=df)
+pvalue
+```
+
+As the pvalue of both the tests is > $\alpha$ = 0.05, we fail to reject null hypothesis and conclude that the away team goals follows a poisson distribution.
+
+(c) Total Goals
+
+Null hypothesis is the total team goals follows a poisson distribution.
+Alternate hypothesis is the total team goals does not follow a poisson distribution. 
+Assume, significance level, $\alpha$ = 0.05
+
+```{r}
+totalgoals = EPL201415$FTAG + EPL201415$FTHG 
+totalgoals = totalgoals[1:380] 
+data.frame(table(totalgoals))
+games=length(totalgoals)
+goals=sum(totalgoals)
+ave=goals/games
+expected = games * dpois(0:20, ave) 
+data.frame(goals=0:20, expected=round(expected, 1))
+```
+As the expected values is less than 5 for goals 7 and above, we combine 7 or more goals.
+
+```{r}
+observed=c(31,77,88,85,56,27,9,7)
+expected=rep(NA, 8)
+expected[1:7]=games * dpois(0:6,ave) 
+expected[8]=games * (1 - ppois(6,ave)) 
+data.frame(observed,expected=round(expected, 1))
+```
+
+The pvalue in likelyhood ratio test is- 
+
+```{r}
+df=6
+G2 = 2 * sum(observed * log(observed/expected)) 
+pvalue= 1 - pchisq(G2, df=df)
+pvalue
+```
+
+The pvalue in Pearson's test is- 
+
+```{r}
+X2 = sum((observed - expected)^2 / expected)
+pvalue= 1 - pchisq(X2, df=df)
+pvalue
+```
+As the pvalue of both the tests is > $\alpha$ = 0.05, we fail to reject null hypothesis and conclude that the total goals follows a poisson
+distribution.
+
+5.
+
+(a)
+
+Null hypothesis is anger is not asociated with heart disease.
+Alternate hypothesis is anger is asociated with heart disease.
+Assume, significance level, $\alpha$ = 0.05
+
+```{r}
+observed=c(53, 3110-53, 110, 4731-110, 27, 633-27) 
+n=sum(observed)
+la=3110/n
+ma=4731/n
+ha=633/n
+hd=(53+110+27)/n 
+no_hd=c(3057+4621+606)/n 
+expected=c(la*hd*n, la*no_hd*n,ma*hd*n, ma*no_hd*n,ha*hd*n, ha*no_hd*n) 
+data.frame(observed, expected=round(expected, 1))
+```
+
+The pvalue in likelyhood ratio test is- 
+
+```{r}
+df=(3-1)*(2-1)
+G2 = 2 * sum(observed * log(observed/expected)) 
+G2
+pvalue= 1 - pchisq(G2, df=df)
+pvalue
+```
+
+The pvalue in Pearson's test is- 
+
+```{r}
+X2 = sum((observed - expected)^2 / expected)
+X2
+pvalue= 1 - pchisq(X2, df=df)
+pvalue
+```
+
+As the pvalue of both the tests is < $\alpha$ = 0.05, we reject null hypothesis and conclude that anger is associated with heart disease.
+
+(b)
+This analysis alone does not prove that anger affects the chance of getting heart disease because from the data we see that 2% of the people with low and moderate anger got heart disease whereas 4% of people with high anger got heart disease which shows samples are not generated uniformly. Moreover, the chi-squared test does not consider factors such as gender, age, patients health history, genetic factors which can heavily influence the chance of developing heart disease. We are not sure if these factors are considered when generating the samples.
+
+6.
+
+```{r}
+library(webshot)
+webshot('GTC.png')
+```
